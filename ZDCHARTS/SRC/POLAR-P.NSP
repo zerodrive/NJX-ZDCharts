@@ -1,0 +1,99 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+/** POLAR-P.NSP
+/** Version: 0.8
+/** Copyright 2015 Thomas Schwade
+/** http://www.zerodrive.net
+/** Licensed under the EUPL V.1.1
+/** https://github.com/zerodrive/NJX-ZDCharts/blob/master/LICENSE.pdf
+/** Example program for the Chart.js PolarArea chart.
+/**
+DEFINE DATA LOCAL
+1 POLARDATA (U) DYNAMIC
+1 SELECTEDLABEL (U) DYNAMIC
+1 #I (I2)
+1 #SELIND (I2)
+1 #STR (U) DYNAMIC
+1 #MESSAGE (U) DYNAMIC
+LOCAL USING CHART2-A
+END-DEFINE
+*
+* Fill the data structure for the PolarArea chart.
+PERFORM FILLPOLARCHART
+* Serialize the data.
+CALLNAT 'CHART2-N' CHART2-A POLARDATA
+* Show the page.
+PROCESS PAGE USING "POLAR"
+*
+* Handle events.
+DECIDE ON FIRST *PAGE-EVENT
+  VALUE U'nat:page.end', U'nat:browser.end'
+    IGNORE
+  VALUE U'onClick'
+    PERFORM FINDSELECTED
+    PERFORM BUILDMESSAGE
+    PROCESS PAGE UPDATE FULL
+      AND SEND EVENT 'nat:page.message'
+      WITH PARAMETERS
+        NAME 'type' VALUE 'S'
+        NAME 'short' VALUE #MESSAGE
+      END-PARAMETERS
+  NONE VALUE
+    PROCESS PAGE UPDATE
+END-DECIDE
+*
+DEFINE SUBROUTINE FILLPOLARCHART
+* Five values.
+RESIZE AND RESET ARRAY CHART2-A.DSERIES TO (1:5)
+* We use three chart properties per value (see below).
+RESIZE AND RESET ARRAY CHART2-A.DPROPS TO (*,1:3)
+* Fill the chart properties for each value.
+CHART2-A.PNAME(*,1) := 'label'
+CHART2-A.PVALUE(1,1) := 'Red'
+CHART2-A.PVALUE(2,1) := 'Green'
+CHART2-A.PVALUE(3,1) := 'Yellow'
+CHART2-A.PVALUE(4,1) := 'Grey'
+CHART2-A.PVALUE(5,1) := 'Dark Grey'
+CHART2-A.PNAME(*,2) := 'color'
+CHART2-A.PVALUE(1,2) := '#F7464A'
+CHART2-A.PVALUE(2,2) := '#46BFBD'
+CHART2-A.PVALUE(3,2) := '#FDB45C'
+CHART2-A.PVALUE(4,2) := '#949FB1'
+CHART2-A.PVALUE(5,2) := '#4D5360'
+CHART2-A.PNAME(*,3) := 'highlight'
+CHART2-A.PVALUE(1,3) := '#FF5A5E'
+CHART2-A.PVALUE(2,3) := '#5AD3D1'
+CHART2-A.PVALUE(3,3) := '#FFC870'
+CHART2-A.PVALUE(4,3) := '#A8B3C5'
+CHART2-A.PVALUE(5,3) := '#616774'
+* Fill the values.
+CHART2-A.DDATA(1) := 300
+CHART2-A.DDATA(2) := 50
+CHART2-A.DDATA(3) := 100
+CHART2-A.DDATA(4) := 40
+CHART2-A.DDATA(5) := 120
+END-SUBROUTINE
+*
+DEFINE SUBROUTINE FINDSELECTED
+RESET #SELIND
+FOR #I := 1 TO 5
+  IF CHART2-A.PVALUE(#I,1) EQ SELECTEDLABEL
+    #SELIND := #I
+    ESCAPE BOTTOM
+  END-IF
+END-FOR
+END-SUBROUTINE
+*
+DEFINE SUBROUTINE BUILDMESSAGE
+IF #SELIND GE 1 AND #SELIND LE 5
+  COMPRESS 'You clicked on ' CHART2-A.PVALUE(#SELIND,1) TO #MESSAGE
+  COMPRESS #MESSAGE '.' TO #MESSAGE LEAVING NO
+  MOVE EDITED CHART2-A.DDATA(#SELIND) (EMU=Z(8)9) TO #STR
+  COMPRESS #MESSAGE 'Value is' #STR TO #MESSAGE
+  COMPRESS #MESSAGE '.' TO #MESSAGE LEAVING NO
+END-IF
+END-SUBROUTINE
+*
+END

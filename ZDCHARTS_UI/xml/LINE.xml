@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<natpage natkcheck="true" xmlns:njx="http://www.softwareag.com/njx/njxMapConverter">
+    <titlebar name="Example for the Chart.js Line chart">
+    </titlebar>
+    <pagebody takefullheight="true">
+        <itr takefullwidth="true" height="100%">
+            <zdcharts:chart charttype="Line" valueprop="linedata" selectedprop="selectedLabel" clickmethod="onClick" width="800px" height="500px">
+            </zdcharts:chart>
+        </itr>
+    </pagebody>
+    <statusbar>
+    </statusbar>
+</natpage>

@@ -1,0 +1,5 @@
+<ciseditorconfig>
+    <codegeneration disablepropnamevalidation="false"
+        previewdirection="ltr"
+        propnamevalidation="(([a-z,_,/,X]{1}[a-z,A-Z,0-9,_,.,:,\\[,\\]]*)|[a]{0})" sourcedir="./src"/>
+</ciseditorconfig>

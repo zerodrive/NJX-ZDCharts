@@ -1,0 +1,21 @@
+DEFINE DATA PARAMETER
+/* >Natural Source Header 000000
+/* :Mode S
+/* :CP
+/* <Natural Source Header
+/** CHART1-A.NSA
+/** Version: 0.8
+/** Copyright 2015 Thomas Schwade
+/** http://www.zerodrive.net
+/** Licensed under the EUPL V.1.1
+/** https://github.com/zerodrive/NJX-ZDCharts/blob/master/LICENSE.pdf
+/** Use this data structure for the Line chart, Bar chart and Radar chart.
+/**
+1 CHART1-A
+2 DLABEL (U/1:*) DYNAMIC
+2 DSERIES (1:*)
+3 DPROPS (1:*)
+4 PNAME (U) DYNAMIC
+4 PVALUE (U) DYNAMIC
+3 DDATA (P9.2/1:*)
+END-DEFINE

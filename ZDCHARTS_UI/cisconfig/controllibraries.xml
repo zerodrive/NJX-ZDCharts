@@ -1,0 +1,10 @@
+<!--
+editor_zdcharts.xml
+Version: 0.8
+Copyright 2015 Thomas Schwade
+http://www.zerodrive.net
+Licensed under the EUPL V.1.1
+https://github.com/zerodrive/NJX-ZDCharts/blob/master/LICENSE.pdf
+-->
+<library prefix="zdcharts" package="net.zerodrive.njx.controls.charts">
+</library>

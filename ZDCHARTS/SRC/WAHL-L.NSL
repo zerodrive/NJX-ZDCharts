@@ -1,0 +1,39 @@
+DEFINE DATA LOCAL
+/* >Natural Source Header 000000
+/* :Mode S
+/* :CP
+/* <Natural Source Header
+/** WAHL-L.NSL
+/** Version: 0.8
+/** Copyright 2015 Thomas Schwade
+/** http://www.zerodrive.net
+/** Licensed under the EUPL V.1.1
+/** https://github.com/zerodrive/NJX-ZDCharts/blob/master/LICENSE.pdf
+/** Example data for the usage of Chart.js.
+/** Contains the results of all Bundestag elections so far and the party colors.
+/**
+1 WAHLEN
+2 PARTEI (U15/1:6) INIT <'CDU/CSU','SPD','FDP','B90/Die Gruenen','PDS/DIE LINKE','Sonstige'>
+2 PARTEICOLOR (U24/1:6) INIT <'rgb(0,0,0)','rgb(255,182,193)','rgb(255,255,0)','rgb(0,255,0)','rgb(255,0,0)','rgb(112,128,144)'>
+2 PARTEICOLORLIGHT (U24/1:6) INIT <'rgba(0,0,0,0.5)','rgba(255,182,193,0.5)','rgba(255,255,0,0.5)','rgba(0,255,0,0.5)','rgba(255,0,0,0.5)','rgba(112,128,144,0.5)'>
+2 JAHR (U4/1:18) INIT <1949,1953,1957,1961,1965,1969,1972,1976,1980,1983,1987,1990,1994,1998,2002,2005,2009,2013>
+2 ERGEBNIS (P9.2/1:6,1:18) INIT
+(V,01) <31.0,29.2,11.9,0.0,0.0,27.9>
+(V,02) <45.2,28.8,9.5,0.0,0.0,16.5>
+(V,03) <50.2,31.8,7.7,0.0,0.0,10.3>
+(V,04) <45.3,36.2,12.8,0.0,0.0,5.7>
+(V,05) <47.6,39.3,9.5,0.0,0.0,3.6>
+(V,06) <46.1,42.7,5.8,0.0,0.0,5.4>
+(V,07) <44.9,45.8,8.4,0.0,0.0,0.9>
+(V,08) <48.6,42.6,7.9,0.0,0.0,0.9>
+(V,09) <44.5,42.9,10.6,1.5,0.0,0.5>
+(V,10) <48.8,38.2,7.0,5.6,0.0,0.4>
+(V,11) <44.3,37.0,9.1,8.3,0.0,1.3>
+(V,12) <43.8,33.5,11.0,5.0,2.4,4.3>
+(V,13) <41.5,36.4,6.9,7.3,4.4,3.5>
+(V,14) <35.2,40.9,6.2,6.7,5.1,5.9>
+(V,15) <38.5,38.5,7.4,8.6,4.0,3.0>
+(V,16) <35.2,34.2,9.8,8.1,8.7,4.0>
+(V,17) <33.8,23.0,14.6,10.7,11.9,6.0>
+(V,18) <41.5,25.7,4.8,8.4,8.6,11>
+END-DEFINE

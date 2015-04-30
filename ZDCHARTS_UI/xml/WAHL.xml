@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<natpage natkcheck="true" xmlns:njx="http://www.softwareag.com/njx/njxMapConverter">
+    <titlebar name="Bundestagswahlen 1949-2013">
+    </titlebar>
+    <header>
+        <button name="Update" method="onUpdate">
+        </button>
+    </header>
+    <pagebody takefullheight="true">
+        <itr takefullwidth="true" height="50%">
+            <zdcharts:chart charttype="Line" valueprop="linedata" selectedprop="selectedYear" clickmethod="onClickLine" width="900px" height="300px">
+            </zdcharts:chart>
+        </itr>
+        <itr takefullwidth="true" height="50%">
+            <zdcharts:chart charttype="Doughnut" valueprop="doughnutdata" selectedprop="selectedParty" clickmethod="onClickDoughnut" width="300px" height="300px">
+            </zdcharts:chart>
+            <zdcharts:chart charttype="Bar" valueprop="bardata" width="500px" height="300px">
+            </zdcharts:chart>
+        </itr>
+    </pagebody>
+    <statusbar>
+    </statusbar>
+</natpage>

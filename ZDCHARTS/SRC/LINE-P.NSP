@@ -1,0 +1,119 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+/** LINE-P.NSP
+/** Version: 0.8
+/** Copyright 2015 Thomas Schwade
+/** http://www.zerodrive.net
+/** Licensed under the EUPL V.1.1
+/** https://github.com/zerodrive/NJX-ZDCharts/blob/master/LICENSE.pdf
+/** Example program for the Chart.js Line chart.
+/**
+DEFINE DATA LOCAL
+1 LINEDATA (U) DYNAMIC
+1 SELECTEDLABEL (U) DYNAMIC
+1 #SELIND (I2)
+1 #STR1 (U) DYNAMIC
+1 #STR2 (U) DYNAMIC
+1 #MESSAGE (U) DYNAMIC
+LOCAL USING CHART1-A
+END-DEFINE
+*
+* Fill the data structure for the Line chart.
+PERFORM FILLLINECHART
+* Serialize the data.
+CALLNAT 'CHART1-N' CHART1-A LINEDATA
+* Show the page.
+PROCESS PAGE USING "LINE"
+*
+* Handle events.
+DECIDE ON FIRST *PAGE-EVENT
+  VALUE U'nat:page.end', U'nat:browser.end'
+    IGNORE
+  VALUE U'onClick'
+    EXAMINE CHART1-A.DLABEL(*) FOR SELECTEDLABEL GIVING INDEX #SELIND
+    PERFORM BUILDMESSAGE
+    PROCESS PAGE UPDATE FULL
+      AND SEND EVENT 'nat:page.message'
+      WITH PARAMETERS
+        NAME 'type' VALUE 'S'
+        NAME 'short' VALUE #MESSAGE
+      END-PARAMETERS
+  NONE VALUE
+    PROCESS PAGE UPDATE
+END-DECIDE
+*
+DEFINE SUBROUTINE FILLLINECHART
+* Prepare the data arrays.
+* Eight months.
+RESIZE AND RESET ARRAY CHART1-A.DLABEL TO (1:8)
+* Two data series.
+RESIZE AND RESET ARRAY CHART1-A.DSERIES TO (1:2)
+* We use seven chart properties per series.
+RESIZE AND RESET ARRAY CHART1-A.DPROPS TO (*,1:7)
+* Eight values per series.
+RESIZE AND RESET ARRAY CHART1-A.DDATA TO (*,1:8)
+*
+* Fill the labels for each month.
+CHART1-A.DLABEL(1) := 'January'
+CHART1-A.DLABEL(2) := 'February'
+CHART1-A.DLABEL(3) := 'March'
+CHART1-A.DLABEL(4) := 'April'
+CHART1-A.DLABEL(5) := 'May'
+CHART1-A.DLABEL(6) := 'June'
+CHART1-A.DLABEL(7) := 'July'
+CHART1-A.DLABEL(8) := 'August'
+* Fill the chart properties for both series.
+CHART1-A.PNAME(*,1) := 'label'
+CHART1-A.PVALUE(1,1) := 'My First dataset'
+CHART1-A.PVALUE(1,2) := 'My Second dataset'
+CHART1-A.PNAME(*,2) := 'fillColor'
+CHART1-A.PVALUE(1,2) := 'rgba(220,220,220,0.2)'
+CHART1-A.PVALUE(2,2) := 'rgba(151,187,205,0.2)'
+CHART1-A.PNAME(*,3) := 'strokeColor'
+CHART1-A.PVALUE(1,3) := 'rgba(220,220,220,1)'
+CHART1-A.PVALUE(2,3) := 'rgba(151,187,205,1)'
+CHART1-A.PNAME(*,4) := 'pointColor'
+CHART1-A.PVALUE(1,4) := 'rgba(220,220,220,1)'
+CHART1-A.PVALUE(2,4) := 'rgba(151,187,205,1)'
+CHART1-A.PNAME(*,5) := 'pointStrokeColor'
+CHART1-A.PVALUE(1,5) := '#fff'
+CHART1-A.PVALUE(2,5) := '#fff'
+CHART1-A.PNAME(*,6) := 'pointHighlightFill'
+CHART1-A.PVALUE(1,6) := '#fff'
+CHART1-A.PVALUE(2,6) := '#fff'
+CHART1-A.PNAME(*,7) := 'pointHighlightStroke'
+CHART1-A.PVALUE(1,7) := 'rgba(220,220,220,1)'
+CHART1-A.PVALUE(2,7) := 'rgba(151,187,205,1)'
+* Fill the data for both series.
+CHART1-A.DDATA(1,1) := 65
+CHART1-A.DDATA(1,2) := 59
+CHART1-A.DDATA(1,3) := 80
+CHART1-A.DDATA(1,4) := 81
+CHART1-A.DDATA(1,5) := 56
+CHART1-A.DDATA(1,6) := 55
+CHART1-A.DDATA(1,7) := 40
+CHART1-A.DDATA(1,8) := 45
+CHART1-A.DDATA(2,1) := 28
+CHART1-A.DDATA(2,2) := 48
+CHART1-A.DDATA(2,3) := 40
+CHART1-A.DDATA(2,4) := 19
+CHART1-A.DDATA(2,5) := 86
+CHART1-A.DDATA(2,6) := 27
+CHART1-A.DDATA(2,7) := 90
+CHART1-A.DDATA(2,8) := 65
+END-SUBROUTINE
+*
+DEFINE SUBROUTINE BUILDMESSAGE
+IF #SELIND GE 1 AND #SELIND LE 8
+  COMPRESS 'You clicked on ' CHART1-A.DLABEL(#SELIND) TO #MESSAGE
+  COMPRESS #MESSAGE '.' TO #MESSAGE LEAVING NO
+  MOVE EDITED CHART1-A.DDATA(1,#SELIND) (EMU=Z(8)9) TO #STR1
+  MOVE EDITED CHART1-A.DDATA(2,#SELIND) (EMU=Z(8)9) TO #STR2
+  COMPRESS #MESSAGE 'Values are' #STR1 'and' #STR2 TO #MESSAGE
+  COMPRESS #MESSAGE '.' TO #MESSAGE LEAVING NO
+END-IF
+END-SUBROUTINE
+*
+END

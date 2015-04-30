@@ -1,0 +1,179 @@
+* >Natural Source Header 000000
+* :Mode S
+* :CP
+* <Natural Source Header
+/** WAHL-P.NSP
+/** Version: 0.8
+/** Copyright 2015 Thomas Schwade
+/** http://www.zerodrive.net
+/** Licensed under the EUPL V.1.1
+/** https://github.com/zerodrive/NJX-ZDCharts/blob/master/LICENSE.pdf
+/** Example program for the usage of Chart.js.
+/**
+DEFINE DATA LOCAL
+1 BARDATA (U) DYNAMIC
+1 DOUGHNUTDATA (U) DYNAMIC
+1 LINEDATA (U) DYNAMIC
+1 SELECTEDPARTY (U) DYNAMIC
+1 SELECTEDYEAR (U) DYNAMIC
+1 #I (I2)
+1 #J (I2)
+1 #SELYEAR (I2)
+1 #SELPARTY (I2)
+1 #SELPARTYHIGH (I2)
+LOCAL USING WAHL-L
+LOCAL USING CHART1-A
+LOCAL USING CHART2-A
+END-DEFINE
+*
+* Show all results of all parties in all elections in the Line chart.
+PERFORM FILLLINECHART
+CALLNAT 'CHART1-N' CHART1-A LINEDATA
+* Show the results of the last election in the Doughnut chart.
+SELECTEDYEAR := WAHLEN.JAHR(18)
+PERFORM FILLDOUGHNUTCHART
+CALLNAT 'CHART2-N' CHART2-A DOUGHNUTDATA
+* Show all results of the second party in the Bar chart, compared
+* to the results of the party with the highest result.
+SELECTEDPARTY := WAHLEN.PARTEI(2)
+PERFORM FILLBARCHART
+CALLNAT 'CHART1-N' CHART1-A BARDATA
+*
+* Show the page.
+PROCESS PAGE USING "WAHL"
+*
+* Handle events.
+DECIDE ON FIRST *PAGE-EVENT
+  VALUE U'nat:page.end', U'nat:browser.end'
+    IGNORE
+  VALUE U'onUpdate'
+    PROCESS PAGE UPDATE FULL
+  VALUE U'onClickLine'
+* When the user clicks a year in the Line chart, show the election
+* result of the clicked year in the Doughnut chart.
+    PERFORM FILLDOUGHNUTCHART
+    CALLNAT 'CHART2-N' CHART2-A DOUGHNUTDATA
+    PROCESS PAGE UPDATE FULL
+  VALUE U'onClickDoughnut'
+* When the user clicks a party in the Doughnut chart, show the all results
+* of the clicked party in the Bar chart, compared to the results of the 
+* party with the highest result.
+    PERFORM FILLBARCHART
+    CALLNAT 'CHART1-N' CHART1-A BARDATA
+    PROCESS PAGE UPDATE FULL
+  NONE VALUE
+    PROCESS PAGE UPDATE
+END-DECIDE
+*
+DEFINE SUBROUTINE FILLLINECHART
+* 18 elections.
+RESIZE AND RESET ARRAY CHART1-A.DLABEL TO (1:18)
+* Six parties.
+RESIZE AND RESET ARRAY CHART1-A.DSERIES TO (1:6)
+* We use seven chart properties per party (see below).
+RESIZE AND RESET ARRAY CHART1-A.DPROPS TO (*,1:7)
+* 18 results per party.
+RESIZE AND RESET ARRAY CHART1-A.DDATA TO (*,1:18)
+* Fill the labels for each year.
+FOR #I := 1 TO 18
+  CHART1-A.DLABEL(#I) := WAHLEN.JAHR(#I)
+END-FOR
+* Fill the chart properties for both parties.
+FOR #J := 1 TO 6
+  CHART1-A.PNAME(#J,1) := 'label'
+  CHART1-A.PVALUE(#J,1) := WAHLEN.PARTEI(#J)
+  CHART1-A.PNAME(#J,2) := 'fillColor'
+  CHART1-A.PVALUE(#J,2) := 'rgba(255,255,255,0)' /* transparent
+  CHART1-A.PNAME(#J,3) := 'strokeColor'
+  CHART1-A.PVALUE(#J,3) := WAHLEN.PARTEICOLOR(#J)
+  CHART1-A.PNAME(#J,4) := 'pointColor'
+  CHART1-A.PVALUE(#J,4) := WAHLEN.PARTEICOLOR(#J)
+  CHART1-A.PNAME(#J,5) := 'pointStrokeColor'
+  CHART1-A.PVALUE(#J,5) := '#fff'
+  CHART1-A.PNAME(#J,6) := 'pointHighlightFill'
+  CHART1-A.PVALUE(#J,6) := '#fff'
+  CHART1-A.PNAME(#J,7) := 'pointHighlightStroke'
+  CHART1-A.PVALUE(#J,7) := WAHLEN.PARTEICOLOR(#J)
+END-FOR
+* Fill the data for each year and party.
+FOR #I := 1 TO 18
+  FOR #J := 1 TO 6
+    CHART1-A.DDATA(#J,#I) := WAHLEN.ERGEBNIS(#J,#I)
+  END-FOR
+END-FOR
+END-SUBROUTINE
+*
+DEFINE SUBROUTINE FILLDOUGHNUTCHART
+* Six parties.
+RESIZE AND RESET ARRAY CHART2-A.DSERIES TO (1:6)
+* We use three chart properties per party (see below).
+RESIZE AND RESET ARRAY CHART2-A.DPROPS TO (*,1:3)
+* Get the index of the selected year.
+EXAMINE WAHLEN.JAHR(*) FOR SELECTEDYEAR GIVING INDEX #SELYEAR
+* Fill the chart properties for each party.
+FOR #I := 1 TO 6
+  CHART2-A.PNAME(#I,1) := 'label'
+  CHART2-A.PVALUE(#I,1) := WAHLEN.PARTEI(#I)
+  CHART2-A.PNAME(#I,2) := 'color'
+  CHART2-A.PVALUE(#I,2) := WAHLEN.PARTEICOLOR(#I)
+  CHART2-A.PNAME(#I,3) := 'highlight'
+  CHART2-A.PVALUE(#I,3) := WAHLEN.PARTEICOLORLIGHT(#I)
+END-FOR
+* Fill the data for each party.
+FOR #I := 1 TO 6
+  CHART2-A.DDATA(#I) := WAHLEN.ERGEBNIS(#I,#SELYEAR)
+END-FOR
+END-SUBROUTINE
+*
+DEFINE SUBROUTINE FILLBARCHART
+* 18 elections.
+RESIZE AND RESET ARRAY CHART1-A.DLABEL TO (1:18)
+* We show the data series of two parties.
+RESIZE AND RESET ARRAY CHART1-A.DSERIES TO (1:2)
+* We use  five chart properties per party (see below).
+RESIZE AND RESET ARRAY CHART1-A.DPROPS TO (*,1:5)
+* 18 election results per party.
+RESIZE AND RESET ARRAY CHART1-A.DDATA TO (*,1:18)
+* Get the index of the selected party.
+EXAMINE WAHLEN.PARTEI(*) FOR SELECTEDPARTY GIVING INDEX #SELPARTY
+* Find the index of the party with the highest result in that election.
+* We want to compare this result with the selected party in the bar chart.
+#SELPARTYHIGH := 1
+FOR #I := 1 TO 6
+  IF WAHLEN.ERGEBNIS(#I,#SELYEAR) GT WAHLEN.ERGEBNIS(#SELPARTYHIGH,#SELYEAR)
+    #SELPARTYHIGH := #I
+  END-IF
+END-FOR
+* Fill the labels for each year.
+FOR #I := 1 TO 18
+  CHART1-A.DLABEL(#I) := WAHLEN.JAHR(#I)
+END-FOR
+* Fill the chart properties for the two parties.
+CHART1-A.PNAME(1,1) := 'label'
+CHART1-A.PVALUE(1,1) := WAHLEN.PARTEI(#SELPARTY)
+CHART1-A.PNAME(1,2) := 'fillColor'
+CHART1-A.PVALUE(1,2) := WAHLEN.PARTEICOLOR(#SELPARTY)
+CHART1-A.PNAME(1,3) := 'strokeColor'
+CHART1-A.PVALUE(1,3) := WAHLEN.PARTEICOLOR(#SELPARTY)
+CHART1-A.PNAME(1,4) := 'highlightFill'
+CHART1-A.PVALUE(1,4) := WAHLEN.PARTEICOLORLIGHT(#SELPARTY)
+CHART1-A.PNAME(1,5) := 'highlightStroke'
+CHART1-A.PVALUE(1,5) := WAHLEN.PARTEICOLORLIGHT(#SELPARTY)
+CHART1-A.PNAME(2,1) := 'label'
+CHART1-A.PVALUE(2,1) := WAHLEN.PARTEI(#SELPARTYHIGH)
+CHART1-A.PNAME(2,2) := 'fillColor'
+CHART1-A.PVALUE(2,2) := WAHLEN.PARTEICOLOR(#SELPARTYHIGH)
+CHART1-A.PNAME(2,3) := 'strokeColor'
+CHART1-A.PVALUE(2,3) := WAHLEN.PARTEICOLOR(#SELPARTYHIGH)
+CHART1-A.PNAME(2,4) := 'highlightFill'
+CHART1-A.PVALUE(2,4) := WAHLEN.PARTEICOLORLIGHT(#SELPARTYHIGH)
+CHART1-A.PNAME(2,5) := 'highlightStroke'
+CHART1-A.PVALUE(2,5) := WAHLEN.PARTEICOLORLIGHT(#SELPARTYHIGH)
+* Fill the data for each year and party.
+FOR #I := 1 TO 18
+  CHART1-A.DDATA(1,#I) := WAHLEN.ERGEBNIS(#SELPARTY,#I)
+  CHART1-A.DDATA(2,#I) := WAHLEN.ERGEBNIS(#SELPARTYHIGH,#I)
+END-FOR
+END-SUBROUTINE
+*
+END

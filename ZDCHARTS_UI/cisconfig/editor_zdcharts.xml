@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+editor_zdcharts.xml
+Version: 0.8
+Copyright 2015 Thomas Schwade
+http://www.zerodrive.net
+Licensed under the EUPL V.1.1
+https://github.com/zerodrive/NJX-ZDCharts/blob/master/LICENSE.pdf
+-->
+<controllibrary>
+	<editor>
+		<datatype name="charttype">
+			<value id="Bar" name="Bar chart" />
+			<value id="Pie" name="Pie chart" />
+			<value id="Doughnut" name="Doughnut chart" />
+			<value id="Line" name="Line chart" />
+			<value id="PolarArea" name="Polar area" />
+			<value id="Radar" name="Radar chart" />
+		</datatype>
+		<tag name="zdcharts:chart" helptext="Chart.js Chart">
+			<taginstance>
+			</taginstance>
+			<attribute name="charttype" datatype="charttype" helptext="Chart type" />
+			<attribute name="valueprop" datatype="property" helptext="Chart data" />
+			<attribute name="selectedprop" datatype="property" helptext="Selected label" />
+			<attribute name="width" datatype="width" helptext="Width" />
+			<attribute name="height" datatype="height" helptext="Height" />
+			<attribute name="clickmethod" datatype="method" helptext="Click method" />
+			<attribute name="responsive" datatype="boolean" helptext="Responsive chart" />
+		</tag>
+		<tagsubnodeextension control="itr" newsubnode="zdcharts:chart" />
+		<taggroupsubnodeextension group="zerodrive" newsubnode="zdcharts:chart" />
+	</editor>
+</controllibrary>
+
