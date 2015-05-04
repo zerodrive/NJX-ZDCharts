@@ -17,7 +17,29 @@ The charts are interactive. Clicking inside a chart raises an event in the appli
 
 ## Installation
 
-The file NJX-ZDCharts.zip contains a NaturalONE&trade; project that can be imported into a NaturalONE&trade; Eclipse&trade; workspace. After having built the project, you will find the new control **Chart.js Chart** in the section **zerodrive** in the Layout Painter. Check and execute the example programs to verify if everything is working.
+### If you are using Git
+
+- Clone the project into your NaturalONE&trade; workspace.
+ 
+		git clone https://github.com/zerodrive/NJX-ZDCharts
+
+- Import the project.
+ 
+		> Import > Existing projects into workspace
+
+- Build the project.
+
+### If you are not using Git
+
+- Select "Download ZIP".
+
+- Import the .zip file NJX-ZDCharts.zip as project into your NaturalONE&trade; workspace.
+
+		> Import > Existing projects into workspace
+
+- Build the project.
+
+After having built the project, you will find the new control **Chart.js Chart** in the section **zerodrive** in the Layout Painter. Check and execute the example programs to verify if everything is working.
 
 ## Usage
 
